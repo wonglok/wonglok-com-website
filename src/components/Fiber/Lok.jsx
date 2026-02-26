@@ -14,6 +14,7 @@ export function LokLok(props) {
         <group>
             <Center>
                 <group {...props} dispose={null}>
+
                     <mesh geometry={nodes.Text.geometry} position={[0.016, 0.337, 0]} rotation={[Math.PI / 2, 0, 0]} >
                         <meshPhysicalNodeMaterial thickness={2} reflectivity={0.5} metalness={0} color={'#90daff'} roughness={0} transmission={1}></meshPhysicalNodeMaterial>
                     </mesh>

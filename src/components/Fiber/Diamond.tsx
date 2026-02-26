@@ -13,11 +13,11 @@ function DiamondApp() {
       <CanvasGPU webgpu>
         {/* <color attach="background" args={["#ffffff"]} /> */}
         <Suspense fallback={null}>
-          {/* <Environment
+          <Environment
             background
             backgroundIntensity={1.15}
             files={[`/hdr/sky.hdr`]}
-          /> */}
+          />
           <group>
             <group position={[0, 0, 0]}>
               <LokLok></LokLok>
@@ -30,8 +30,8 @@ function DiamondApp() {
             makeDefault
           />
 
-          <EnvLoader url="/hdr/sky.hdr"></EnvLoader>
-          {/* <BloomPipeline /> */}
+          {/* <EnvLoader url="/hdr/sky.hdr"></EnvLoader> */}
+          <BloomPipeline />
         </Suspense>
       </CanvasGPU>
     </>
