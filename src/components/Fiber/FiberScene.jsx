@@ -15,7 +15,11 @@ export const FiberScene = () => {
         <Canvas>
             <ambientLight />
             {/* <Box /> */}
-            <OrbitControls>
+            <OrbitControls
+                makeDefault
+                target={[0, 0.0, 0]}
+                enableDamping={true}
+                enablePan={false}>
             </OrbitControls>
             <Environment background files={[`/sky.hdr`]}></Environment>
             <LokLok></LokLok>
