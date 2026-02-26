@@ -10,8 +10,6 @@ import GUI from "three/examples/jsm/libs/lil-gui.module.min.js";
 export function DiamindComponent() {
   const gl = useThree((r) => r.gl);
 
-  // const churchModel = useGLTF(`/env/digital-palace-loklok.glb`)
-
   const diamondModel = useGLTF(`/models/diamond/diamond.glb`);
 
   const [dAPI, setDiamond] = useState<any>(null);
@@ -26,6 +24,7 @@ export function DiamindComponent() {
 
     const allDiamonds = clone(diamondModel.scene);
     const obj = allDiamonds.getObjectByName("diam_1")! as Mesh;
+
     obj.geometry = obj.geometry.toNonIndexed();
     obj.geometry.center();
     obj.geometry.computeVertexNormals();
@@ -44,7 +43,7 @@ export function DiamindComponent() {
 
     const mesh = new Mesh(obj.geometry, material);
     mesh.castShadow = true;
-    mesh.scale.setScalar(25);
+    mesh.scale.setScalar(20);
 
     const capture = ({ scene }: any) => {
       mesh.getWorldPosition(cubeCam.position);
