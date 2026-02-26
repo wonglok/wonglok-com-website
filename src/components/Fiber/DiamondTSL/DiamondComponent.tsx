@@ -150,6 +150,8 @@ export function DiamindComponent() {
         }
       });
 
+      gui.close();
+
       return () => {
         document.body.removeChild(gui.domElement);
         gui.destroy();
