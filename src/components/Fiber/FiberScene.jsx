@@ -1,28 +1,7 @@
-import { Environment, OrbitControls } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { LokLok } from './Lok';
-
-// Simple example box
-const Box = () => (
-    <mesh>
-        <boxGeometry />
-        <meshNormalMaterial />
-    </mesh>
-);
+import { DiamondApp } from './Diamond';
 
 export const FiberScene = () => {
     return (
-        <Canvas>
-            <ambientLight />
-            {/* <Box /> */}
-            <OrbitControls
-                makeDefault
-                target={[0, 0.0, 0]}
-                enableDamping={true}
-                enablePan={false}>
-            </OrbitControls>
-            <Environment background files={[`/sky.hdr`]}></Environment>
-            <LokLok></LokLok>
-        </Canvas>
+        <DiamondApp></DiamondApp>
     );
 };
