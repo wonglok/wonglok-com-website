@@ -19,13 +19,8 @@ function DiamondApp() {
             files={[`/hdr/sky.hdr`]}
           /> */}
           <group>
-            <group position={[0.75, 0, 0]}>
+            <group position={[0, 0, 0]}>
               <LokLok></LokLok>
-            </group>
-            <group position={[-0.75, 0, 0]}>
-              <Spinner>
-                <DiamindComponent />
-              </Spinner>
             </group>
           </group>
 
@@ -44,17 +39,5 @@ function DiamondApp() {
 }
 
 //
-
-function Spinner({ children }: any) {
-  const ref = useRef<any>(null);
-
-  useFrame((_, dt) => {
-    if (ref.current) {
-      ref.current.rotation.y += dt * 0.125;
-    }
-  });
-
-  return <group ref={ref}>{children}</group>;
-}
 
 export { DiamondApp };
