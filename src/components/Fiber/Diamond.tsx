@@ -10,10 +10,8 @@ import { LokLok } from "./Lok.jsx";
 function DiamondApp() {
   return (
     <>
-      <CanvasGPU webgpu>
-        {/* <color attach="background" args={["#ffffff"]} /> */}
+      <CanvasGPU>
         <Suspense fallback={null}>
-          {/*  */}
           <Environment
             background
             backgroundIntensity={1.15}
