@@ -18,7 +18,7 @@ function DiamondApp() {
 
           <Environment
             background
-            backgroundIntensity={1.15}
+            backgroundIntensity={1.2}
             files={[`/hdr/sky.hdr`]}
           />
 

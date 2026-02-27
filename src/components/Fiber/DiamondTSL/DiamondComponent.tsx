@@ -52,6 +52,7 @@ export function DiamindComponent() {
     const scene = new Scene();
     scene.environment = envMap;
     scene.background = envMap;
+    scene.backgroundIntensity = 1.23;
 
     const capture = ({}: any) => {
       mesh.getWorldPosition(cubeCam.position);
