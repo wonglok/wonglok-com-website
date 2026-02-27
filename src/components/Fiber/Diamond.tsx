@@ -13,11 +13,13 @@ function DiamondApp() {
       <CanvasGPU webgpu>
         {/* <color attach="background" args={["#ffffff"]} /> */}
         <Suspense fallback={null}>
+          {/*  */}
           <Environment
             background
             backgroundIntensity={1.15}
             files={[`/hdr/sky.hdr`]}
           />
+
           <group>
             <group position={[0, 0, 0]}>
               <LokLok></LokLok>
