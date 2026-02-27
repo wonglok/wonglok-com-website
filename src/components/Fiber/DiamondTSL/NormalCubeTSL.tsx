@@ -22,7 +22,7 @@ export const buildCubeNormal = ({
   gl: any;
   geometry: BufferGeometry;
 }): CubeTexture | any => {
-  const renderTarget = new WebGLCubeRenderTarget(1024, {
+  const renderTarget = new WebGLCubeRenderTarget(512, {
     format: RGBAFormat,
     generateMipmaps: true,
   });

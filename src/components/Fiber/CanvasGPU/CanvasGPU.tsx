@@ -10,6 +10,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from "react";
 import { create } from "zustand";
 import * as THREE from "three/webgpu";
@@ -38,31 +39,22 @@ glbLoader.setDRACOLoader(dracoLoader);
 
 //
 
-export const CanvasGPU: any = ({
-  webgpu = false,
-  webgl = false,
-  antialias = false,
-  children,
-}: {
-  antialias?: boolean;
-  webgpu?: boolean;
-  webgl?: boolean;
-  children?: any;
-}) => {
+export const CanvasGPU: any = ({ children }: { children?: any }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   let dpr = typeof window !== "undefined" ? window?.devicePixelRatio || 1 : 1;
 
-  // if (dpr >= 2) {
-  //   dpr = dpr / 2;
-  // } else if (dpr > 1) {
-  //   dpr = 1;
-  // }
-
-  if (webgl) {
-    dpr = typeof window !== "undefined" ? window?.devicePixelRatio || 1 : 1;
+  if (dpr >= 2) {
+    dpr = dpr / 2;
+  } else if (dpr > 1) {
+    dpr = 1;
   }
 
+  // if (webgl) {
+  //   dpr = typeof window !== "undefined" ? window?.devicePixelRatio || 1 : 1;
+  // }
+
+  let [ok, setOK] = useState(false);
   return (
     <>
       <div className="w-full h-full relative" ref={ref}>
@@ -73,23 +65,8 @@ export const CanvasGPU: any = ({
           gl={async (props: any): Promise<any> => {
             const renderer = new THREE.WebGPURenderer({
               ...(props as any),
-              // multiview: true,
-              antialias: antialias,
               alpha: true,
-              logarithmicDepthBuffer: false,
-              forceWebGL: webgl ? true : webgpu,
-
-              // alpha: false,
-              // depth: false,
-              // toneMapping: THREE.NoToneMapping,
-              // requiredLimits: {
-              //   //
-              //   // maxColorAttachmentBytesPerSample: 40,
-              //   maxColorAttachmentBytesPerSample: 50,
-              //   //
-              // },
-
-              //
+              antialias: false,
             });
 
             await renderer.init();
@@ -107,10 +84,17 @@ export const CanvasGPU: any = ({
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+            renderer.render(
+              new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1)),
+              new THREE.PerspectiveCamera(1, 1, 0.1, 1000),
+            );
+
+            setOK(true);
+
             return renderer;
           }}
         >
-          {children}
+          {ok && children}
         </Canvas>
       </div>
     </>

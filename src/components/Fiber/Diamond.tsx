@@ -8,15 +8,15 @@ import { BloomPipeline } from "./CanvasGPU/BloomPipeline.tsx";
 import { LokLok } from "./Objects/Lok.jsx";
 import { ObjectWater } from "./Objects/ObjectWater.tsx";
 import { DiamondUnit } from "./Objects/Diamond.tsx";
-
 function DiamondApp() {
   //
 
   return (
     <>
-      <CanvasGPU webgpu>
-        <BloomPipeline />
+      <CanvasGPU>
         <Suspense fallback={null}>
+          <BloomPipeline />
+
           <Environment
             background
             backgroundIntensity={1.15}
@@ -25,7 +25,7 @@ function DiamondApp() {
 
           <LokLok></LokLok>
 
-          <ObjectWater></ObjectWater>
+          {/* <ObjectWater></ObjectWater> */}
 
           <DiamondUnit></DiamondUnit>
         </Suspense>

@@ -196,7 +196,6 @@ export function EnvLoader({
     });
 
     return () => {
-      postProcessing.dispose();
       dirL.removeFromParent();
     };
   }, [url, scene, env]);

@@ -1,7 +1,13 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useEnvironment, useGLTF } from "@react-three/drei";
 import { useEffect, useState } from "react";
-import { CubeCamera, Mesh, RGBAFormat, WebGLCubeRenderTarget } from "three";
+import {
+  CubeCamera,
+  Mesh,
+  RGBAFormat,
+  Scene,
+  WebGLCubeRenderTarget,
+} from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { buildCubeNormal } from "./NormalCubeTSL";
 import { getDiamondSystem } from "./DiamondGo";
@@ -14,11 +20,10 @@ export function DiamindComponent() {
 
   const [dAPI, setDiamond] = useState<any>(null);
 
+  const envMap = useEnvironment({ files: [`/sky.hdr`] });
+
   useEffect(() => {
-    const cubeCamRtt = new WebGLCubeRenderTarget(512, {
-      format: RGBAFormat,
-      generateMipmaps: true,
-    });
+    const cubeCamRtt = new WebGLCubeRenderTarget(512, {});
 
     const cubeCam = new CubeCamera(0.1, 500, cubeCamRtt);
 
@@ -44,8 +49,11 @@ export function DiamindComponent() {
     const mesh = new Mesh(obj.geometry, material);
     mesh.castShadow = true;
     mesh.scale.setScalar(20);
+    const scene = new Scene();
+    scene.environment = envMap;
+    scene.background = envMap;
 
-    const capture = ({ scene }: any) => {
+    const capture = ({}: any) => {
       mesh.getWorldPosition(cubeCam.position);
 
       // systemForDiamond.uniforms.centreOffset.value.copy(cubeCam.position)

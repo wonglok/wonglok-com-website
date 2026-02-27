@@ -39,6 +39,7 @@ import {
   modelWorldMatrixInverse,
 } from "three/tsl";
 import {
+  Color,
   CubeTexture,
   MeshBasicNodeMaterial,
   MeshPhysicalNodeMaterial,
@@ -58,7 +59,7 @@ export function getDiamondSystem({
 
   const uniforms = {
     // Cube map for diamond facet normals
-    normalCube: uniform(normalCubeTex), // Set to your cube texture
+    normalCube: normalCubeTex, // Set to your cube texture
 
     // Debug mode
     bDebugBounces: uniform(0),
@@ -79,8 +80,8 @@ export function getDiamondSystem({
     geometryFactor: uniform(0.17),
 
     // Color correction
-    absorbption: uniform(color(0, 0, 0)),
-    correction: uniform(color(0xffffff)),
+    absorbption: uniform(new Color(0, 0, 0)),
+    correction: uniform(new Color(0xffffff)),
     boost: uniform(color(0.892, 0.892, 0.98595025)),
 
     // Sphere approximation parameters
@@ -165,7 +166,7 @@ export function getDiamondSystem({
   // Sample environment with color contribution
   const SampleSpecularContribution: any = Fn(
     ([specularColor, direction]: any) => {
-      const dir = normalize(direction);
+      const dir = normalize(direction) as any;
       const flippedDir = vec3(negate(dir.x), dir.y, negate(dir.z));
 
       const sampleColor = cubeTexture(envMapTex, flippedDir);
@@ -323,12 +324,15 @@ export function getDiamondSystem({
 
       // Transform distance to world space for absorption
       const distWorld = vModelMatrix.mul(vec4(dist, 1.0)).xyz;
-      const r = sqrt(dot(distWorld, distWorld));
+      const r = sqrt(dot(distWorld, distWorld)) as any;
 
       // Apply absorption
       attenuationFactor.assign(
         //
-        mul(attenuationFactor, exp(negate(mul(r, uniforms.absorbption)))),
+        mul(
+          attenuationFactor,
+          exp(negate(mul(r, uniforms.absorbption as any))),
+        ),
       );
 
       // Update position with offset
@@ -369,7 +373,10 @@ export function getDiamondSystem({
           const contrib = mul(
             SampleSpecularContribution(vec4(1.0), d1).rgb,
             mul(
-              mul(mul(uniforms.correction, attenuationFactor), uniforms.boost),
+              mul(
+                mul(uniforms.correction as any, attenuationFactor),
+                uniforms.boost as any,
+              ),
               sub(vec3(1.0), brdfReflectedEsc),
             ),
           );
@@ -419,8 +426,11 @@ export function getDiamondSystem({
         const combinedColor = vec3(colorR.r, colorG.g, colorB.b);
         outColor.addAssign(
           mul(
-            mul(mul(combinedColor, uniforms.correction), attenuationFactor),
-            uniforms.boost,
+            mul(
+              mul(combinedColor, uniforms.correction as any),
+              attenuationFactor,
+            ),
+            uniforms.boost as any,
           ),
         );
 
@@ -433,7 +443,7 @@ export function getDiamondSystem({
           0.0,
         );
         attenuationFactor.assign(
-          mul(mul(attenuationFactor, brdfReflectedIn), uniforms.boost),
+          mul(mul(attenuationFactor, brdfReflectedIn), uniforms.boost as any),
         );
         count.addAssign(int(1));
       });
@@ -482,21 +492,21 @@ export function getDiamondSystem({
   // ============================================
 
   function createDiamondMaterial() {
-    uniforms.normalCube.value = normalCubeTex;
+    uniforms.normalCube = normalCubeTex;
 
     const material = new MeshBasicNodeMaterial({
       // color: 0xffffff,
       // metalness: 0.0,
       // roughness: 0.0,
-      // transmission: 0.0, // We handle this manually in shader
-      // thickness: 0.0,
+      // // transmission: 1.0, // We handle this manually in shader
+      // // thickness: 1.0,
       // envMap: envMapTex,
-      // envMapIntensity: 1.0,
+      // // envMapIntensity: 1.0,
     });
 
     // Assign custom TSL shaders
     // material.vertexNode = diamondVertexShader()
-    material.colorNode = diamondFragmentShader();
+    material.outputNode = diamondFragmentShader();
 
     return material;
   }

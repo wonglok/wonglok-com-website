@@ -9,11 +9,13 @@ import {
   Object3D,
   UnsignedByteType,
 } from "three";
-import { PostProcessing, SRGBColorSpace } from "three/webgpu";
 import {
-  pass,
-  mrt,
-  output,
+  BlendMode,
+  NormalBlending,
+  RenderPipeline,
+  SRGBColorSpace,
+} from "three/webgpu";
+import {
   normalView,
   add,
   directionToColor,
@@ -28,8 +30,15 @@ import {
   vec2,
 } from "three/tsl";
 
-// import { ssr } from "three/addons/tsl/display/SSRNode.js";
+import { pass, mrt, output, emissive, vec4 } from "three/tsl";
 import { bloom } from "three/addons/tsl/display/BloomNode.js";
+
+import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+// import { ssr } from "three/addons/tsl/display/SSRNode.js";
 // import { traa } from "three/addons/tsl/display/TRAANode.js";
 import { fxaa } from "three/addons/tsl/display/FXAANode.js";
 // import { useAppState } from '../World/useAppState';
@@ -39,12 +48,6 @@ export function BloomPipeline() {
   const scene = useThree((r) => r.scene);
   const camera = useThree((r) => r.camera);
   const renderer = useThree((r) => r.gl);
-
-  const [fnc, setFnc] = useState(() => {
-    return () => {
-      renderer.render(scene, camera);
-    };
-  });
 
   useEffect(() => {
     if (!scene) {
@@ -105,128 +108,63 @@ export function BloomPipeline() {
     object.moonLight.shadow.intensity = 2;
     object.moonLight.intensity = 1.5;
 
-    const scenePass = pass(scene, camera);
-    scenePass.setMRT(
-      mrt({
-        output: output,
-        normal: directionToColor(normalView),
-        metalrough: vec2(metalness, roughness), // pack metalness and roughness into a single attachment
-      }),
-    );
-
-    const scenePassColor = scenePass
-      .getTextureNode("output")
-      .toInspector("Color");
-    const scenePassNormal = scenePass
-      .getTextureNode("normal")
-      .toInspector("Normal", (node) => {
-        return colorSpaceToWorking(node, SRGBColorSpace);
-      });
-
-    const scenePassDepth = scenePass
-      .getTextureNode("depth")
-      .toInspector("Depth", () => {
-        return scenePass.getLinearDepthNode();
-      });
-    const scenePassMetalRough = scenePass
-      .getTextureNode("metalrough")
-      .toInspector("Metalness-Roughness");
-
-    // optional: optimize bandwidth by reducing the texture precision for normals and metal/roughness
-
-    const normalTexture = scenePass.getTexture("normal");
-    normalTexture.type = UnsignedByteType;
-
-    const metalRoughTexture = scenePass.getTexture("metalrough");
-    metalRoughTexture.type = UnsignedByteType;
-
-    const sceneNormal = sample((uv) => {
-      return colorToDirection(scenePassNormal.sample(uv));
-    });
-
-    //
-
-    // const ssrPass = ssr(
-    //   scenePassColor,
-    //   scenePassDepth,
-    //   sceneNormal,
-    //   scenePassMetalRough.r,
-    //   scenePassMetalRough.g,
-    // ).toInspector("SSR");
-
-    // // gi
-    // const giPass = ssgi(
-    // 	scenePassColor,
-    // 	scenePassDepth,
-    // 	sceneNormal,
-    // 	camera as any,
-    // );
-    // giPass.sliceCount.value = 2;
-    // giPass.stepCount.value = 8;
-    // giPass.backfaceLighting.value = 1;
-    // giPass.radius.value = 25;
-    // giPass.thickness.value = 2;
-
-    // // composite
-    // const gi = giPass.rgb;
-    // const ao = giPass.a;
-
-    // const compositePass = vec4(
-    // 	add(scenePassColor.rgb.mul(ao), scenePassDiffuse.rgb.mul(gi)),
-    // 	scenePassColor.a,
-    // );
-    // compositePass.name = "Composite";
-
-    // // traa
-    // const traaPass = traa(
-    // 	compositePass,
-    // 	scenePassDepth,
-    // 	scenePassVelocity,
-    // 	camera,
-    // );
-
-    //
-
-    const bloomPass = bloom(scenePassColor, 1.0, 1.0, 0.75);
-
-    const postProcessing = new PostProcessing(renderer as any);
-
-    const aaColor = fxaa(scenePassColor);
-
-    postProcessing.outputNode = add(bloomPass, aaColor);
-
-    postProcessing.needsUpdate = true;
-
-    // rgbeLoader.loadAsync(url).then((texture) => {
-    //   texture.mapping = EquirectangularReflectionMapping;
-    //   scene.background = texture;
-    //   scene.environment = texture;
-
     setSun(
       <group name="light-player-target">
         <primitive object={object}></primitive>
       </group>,
     );
 
-    setFnc(() => {
-      return () => {
-        postProcessing.render();
-      };
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+
+    // set up MRT with emissive
+
+    const mrtNode = mrt({
+      output: output,
+      emissive: vec4(emissive, output.a),
     });
 
-    //   useAppState.setState({ visible: true });
-    // });
+    mrtNode.setBlendMode("emissive", new BlendMode(NormalBlending));
+
+    const scenePass = pass(scene, camera);
+    scenePass.setMRT(mrtNode);
+
+    const colorTexture = scenePass.getTextureNode("output");
+    colorTexture.value.type = UnsignedByteType;
+
+    const emissivePass = scenePass.getTextureNode("emissive");
+
+    const bloomPass = bloom(emissivePass, 2.5, 0.5);
+
+    const aaColor = fxaa(colorTexture.add(bloomPass));
+
+    const outputNode = aaColor;
+
+    const pipeline = new RenderPipeline(renderer as any, outputNode);
+
+    let rAFID: any = 0;
+
+    let rAF = () => {
+      requestAnimationFrame(rAF);
+      pipeline.render();
+    };
+    requestAnimationFrame(rAF);
 
     return () => {
-      postProcessing.dispose();
+      cancelAnimationFrame(rAFID);
       object.clear();
     };
-  }, [scene]);
+  }, []);
 
   //
-  useFrame(() => {
-    fnc();
-  }, 10);
+  useFrame(() => {});
 
   return <>{sun}</>;
 }
