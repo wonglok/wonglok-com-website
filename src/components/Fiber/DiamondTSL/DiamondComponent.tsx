@@ -51,9 +51,11 @@ export function DiamindComponent() {
       // systemForDiamond.uniforms.centreOffset.value.copy(cubeCam.position)
 
       mesh.visible = false;
+      cubeCam.visible = false;
 
       cubeCam.update(gl, scene);
 
+      cubeCam.visible = true;
       mesh.visible = true;
     };
 

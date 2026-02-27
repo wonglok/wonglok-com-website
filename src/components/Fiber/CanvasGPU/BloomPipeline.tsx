@@ -66,10 +66,10 @@ export function BloomPipeline() {
     object.sunLight.shadow.camera.near = 0;
     object.sunLight.shadow.camera.far = 150 * 2;
 
-    object.sunLight.shadow.camera.left = -5.123 * 10;
-    object.sunLight.shadow.camera.right = 5.123 * 10;
-    object.sunLight.shadow.camera.bottom = -5.123 * 10;
-    object.sunLight.shadow.camera.top = 5.123 * 10;
+    object.sunLight.shadow.camera.left = -5.123 * 8;
+    object.sunLight.shadow.camera.right = 5.123 * 8;
+    object.sunLight.shadow.camera.bottom = -5.123 * 8;
+    object.sunLight.shadow.camera.top = 5.123 * 8;
 
     object.sunLight.shadow.mapSize.width = 1024;
     object.sunLight.shadow.mapSize.height = 1024;
@@ -89,10 +89,10 @@ export function BloomPipeline() {
     object.moonLight.shadow.camera.near = 0;
     object.moonLight.shadow.camera.far = 150 * 2;
 
-    object.moonLight.shadow.camera.left = -5.123 * 10;
-    object.moonLight.shadow.camera.right = 5.123 * 10;
-    object.moonLight.shadow.camera.bottom = -5.123 * 10;
-    object.moonLight.shadow.camera.top = 5.123 * 10;
+    object.moonLight.shadow.camera.left = -5.123 * 8;
+    object.moonLight.shadow.camera.right = 5.123 * 8;
+    object.moonLight.shadow.camera.bottom = -5.123 * 8;
+    object.moonLight.shadow.camera.top = 5.123 * 8;
 
     object.moonLight.shadow.mapSize.width = 1024;
     object.moonLight.shadow.mapSize.height = 1024;
@@ -109,40 +109,40 @@ export function BloomPipeline() {
     scenePass.setMRT(
       mrt({
         output: output,
-        // normal: directionToColor(normalView),
-        // metalrough: vec2(metalness, roughness), // pack metalness and roughness into a single attachment
+        normal: directionToColor(normalView),
+        metalrough: vec2(metalness, roughness), // pack metalness and roughness into a single attachment
       }),
     );
 
     const scenePassColor = scenePass
       .getTextureNode("output")
       .toInspector("Color");
-    // const scenePassNormal = scenePass
-    //   .getTextureNode("normal")
-    //   .toInspector("Normal", (node) => {
-    //     return colorSpaceToWorking(node, SRGBColorSpace);
-    //   });
+    const scenePassNormal = scenePass
+      .getTextureNode("normal")
+      .toInspector("Normal", (node) => {
+        return colorSpaceToWorking(node, SRGBColorSpace);
+      });
 
-    // const scenePassDepth = scenePass
-    //   .getTextureNode("depth")
-    //   .toInspector("Depth", () => {
-    //     return scenePass.getLinearDepthNode();
-    //   });
-    // const scenePassMetalRough = scenePass
-    //   .getTextureNode("metalrough")
-    //   .toInspector("Metalness-Roughness");
+    const scenePassDepth = scenePass
+      .getTextureNode("depth")
+      .toInspector("Depth", () => {
+        return scenePass.getLinearDepthNode();
+      });
+    const scenePassMetalRough = scenePass
+      .getTextureNode("metalrough")
+      .toInspector("Metalness-Roughness");
 
-    // // optional: optimize bandwidth by reducing the texture precision for normals and metal/roughness
+    // optional: optimize bandwidth by reducing the texture precision for normals and metal/roughness
 
-    // const normalTexture = scenePass.getTexture("normal");
-    // normalTexture.type = UnsignedByteType;
+    const normalTexture = scenePass.getTexture("normal");
+    normalTexture.type = UnsignedByteType;
 
-    // const metalRoughTexture = scenePass.getTexture("metalrough");
-    // metalRoughTexture.type = UnsignedByteType;
+    const metalRoughTexture = scenePass.getTexture("metalrough");
+    metalRoughTexture.type = UnsignedByteType;
 
-    // const sceneNormal = sample((uv) => {
-    //   return colorToDirection(scenePassNormal.sample(uv));
-    // });
+    const sceneNormal = sample((uv) => {
+      return colorToDirection(scenePassNormal.sample(uv));
+    });
 
     //
 
@@ -186,13 +186,14 @@ export function BloomPipeline() {
     // );
 
     //
-    const bloomPass = bloom(scenePassColor, 1.0, 1.0, 0.75);
 
-    const aaColor = fxaa(scenePassColor);
+    const bloomPass = bloom(scenePassColor, 1.0, 1.0, 0.75);
 
     const postProcessing = new PostProcessing(renderer as any);
 
-    postProcessing.outputNode = bloomPass.add(aaColor);
+    const aaColor = fxaa(scenePassColor);
+
+    postProcessing.outputNode = add(bloomPass, aaColor);
 
     postProcessing.needsUpdate = true;
 

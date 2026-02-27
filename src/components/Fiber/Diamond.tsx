@@ -1,17 +1,21 @@
 import { Suspense, useRef } from "react";
 import { CanvasGPU } from "./CanvasGPU/CanvasGPU.tsx";
-import { Center, Environment, OrbitControls } from "@react-three/drei";
-import { DiamindComponent } from "./DiamondTSL/DiamondComponent.tsx";
+import { Environment, OrbitControls } from "@react-three/drei";
+// import { DiamindComponent } from "./DiamondTSL/DiamondComponent.tsx";
 import { BloomPipeline } from "./CanvasGPU/BloomPipeline.tsx";
-import { useFrame } from "@react-three/fiber";
-import { EnvLoader } from "./CanvasGPU/EnvLoader.tsx";
-import { LokLok } from "./Lok.jsx";
+// import { useFrame } from "@react-three/fiber";
+// import { EnvLoader } from "./CanvasGPU/EnvLoader.tsx";
+import { LokLok } from "./Objects/Lok.jsx";
 import { ObjectWater } from "./Objects/ObjectWater.tsx";
+import { DiamondUnit } from "./Objects/Diamond.tsx";
 
 function DiamondApp() {
+  //
+
   return (
     <>
       <CanvasGPU webgpu>
+        <BloomPipeline />
         <Suspense fallback={null}>
           <Environment
             background
@@ -19,20 +23,19 @@ function DiamondApp() {
             files={[`/hdr/sky.hdr`]}
           />
 
-          <group>
-            <group position={[0, 0, 0]}>
-              <LokLok></LokLok>
-            </group>
-          </group>
+          <LokLok></LokLok>
 
-          <BloomPipeline />
+          <ObjectWater></ObjectWater>
 
-          <OrbitControls
-            object-position={[0, 1, 3]}
-            target={[0, 0, 0]}
-            makeDefault
-          />
+          <DiamondUnit></DiamondUnit>
         </Suspense>
+
+        <OrbitControls
+          //
+          object-position={[0, 1, 3]}
+          target={[0, -0.5, 0]}
+          makeDefault
+        />
       </CanvasGPU>
     </>
   );

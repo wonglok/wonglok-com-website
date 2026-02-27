@@ -13,10 +13,10 @@ export function ObjectWater() {
     geo.rotateX(Math.PI * -0.5);
     const water = new WaterMesh(geo, {
       resolutionScale: 0.5,
-      sunDirection: new Vector3(0, 1, 0),
-      sunColor: 0xffffff,
-      waterColor: 0x001e0f,
-      distortionScale: 5,
+      sunDirection: new Vector3(0, 1, -1),
+      sunColor: "#45b5ff",
+      waterColor: "#77eaea",
+      distortionScale: 10,
       waterNormals: new TextureLoader().load(
         `/textures/waternormals.jpg`,
         (tex) => {
@@ -26,7 +26,7 @@ export function ObjectWater() {
       ),
     });
 
-    water.position.y = -9.6;
+    water.position.y = -2;
     water.rotation.x = Math.PI * 0;
 
     setAPI({
