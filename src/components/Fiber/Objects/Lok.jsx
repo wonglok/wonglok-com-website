@@ -16,12 +16,12 @@ export function LokLok(props) {
         <group>
             <group {...props} dispose={null}>
 
-                <mesh geometry={nodes.Text.geometry} position={[-1.5, -0.5, 0]} rotation={[Math.PI / 2 + 0.125 * -Math.PI, 0, 0]} >
+                <mesh geometry={nodes.Text.geometry} position={[-1.5 * 0.0, -0.5 - 1.1, 0]} rotation={[Math.PI / 2 + 0.125 * -Math.PI, 0, 0]} >
                     <meshPhysicalNodeMaterial thickness={2} reflectivity={0.5} metalness={0} color={'#90daff'} roughness={0} transmission={1}></meshPhysicalNodeMaterial>
                 </mesh>
 
 
-                <mesh geometry={nodes.Text001.geometry} position={[1.5, -0.5, 0]} rotation={[Math.PI / 2 + 0.125 * -Math.PI, 0, 0]} >
+                <mesh geometry={nodes.Text001.geometry} position={[1.5 * 0.0, -0.5 + 1.2, 0]} rotation={[Math.PI / 2 + 0.125 * -Math.PI, 0, 0]} >
                     <meshPhysicalNodeMaterial thickness={2} reflectivity={0.5} metalness={0} color={'#90daff'} roughness={0} transmission={1}></meshPhysicalNodeMaterial>
                 </mesh>
             </group>
