@@ -6,11 +6,12 @@ import { BloomPipeline } from "./CanvasGPU/BloomPipeline.tsx";
 import { useFrame } from "@react-three/fiber";
 import { EnvLoader } from "./CanvasGPU/EnvLoader.tsx";
 import { LokLok } from "./Lok.jsx";
+import { ObjectWater } from "./Objects/ObjectWater.tsx";
 
 function DiamondApp() {
   return (
     <>
-      <CanvasGPU>
+      <CanvasGPU webgpu>
         <Suspense fallback={null}>
           <Environment
             background
@@ -23,15 +24,15 @@ function DiamondApp() {
               <LokLok></LokLok>
             </group>
           </group>
+
+          <BloomPipeline />
+
+          <OrbitControls
+            object-position={[0, 1, 3]}
+            target={[0, 0, 0]}
+            makeDefault
+          />
         </Suspense>
-
-        <OrbitControls
-          object-position={[0, 1, 3]}
-          target={[0, 0, 0]}
-          makeDefault
-        />
-
-        <BloomPipeline />
       </CanvasGPU>
     </>
   );
