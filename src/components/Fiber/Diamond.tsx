@@ -24,8 +24,6 @@ function DiamondApp() {
 
           <LokLok></LokLok>
 
-          {/* <ObjectWater></ObjectWater> */}
-
           <DiamondUnit></DiamondUnit>
         </Suspense>
 
