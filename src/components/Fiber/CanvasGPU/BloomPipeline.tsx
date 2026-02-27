@@ -141,7 +141,7 @@ export function BloomPipeline() {
 
     const emissivePass = scenePass.getTextureNode("emissive");
 
-    const bloomPass = bloom(emissivePass, 2.5, 0.5);
+    const bloomPass = bloom(emissivePass, 2.5, 1.0, 0.25);
 
     const aaColor = fxaa(colorTexture.add(bloomPass));
 
@@ -164,7 +164,7 @@ export function BloomPipeline() {
   }, []);
 
   //
-  useFrame(() => {});
+  useFrame(() => {}, 10000);
 
   return <>{sun}</>;
 }
