@@ -6,7 +6,6 @@ import { BloomPipeline } from "./CanvasGPU/BloomPipeline.tsx";
 // import { useFrame } from "@react-three/fiber";
 // import { EnvLoader } from "./CanvasGPU/EnvLoader.tsx";
 import { LokLok } from "./Objects/Lok.jsx";
-import { ObjectWater } from "./Objects/ObjectWater.tsx";
 import { DiamondUnit } from "./Objects/Diamond.tsx";
 function DiamondApp() {
   //
