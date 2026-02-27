@@ -23,16 +23,15 @@ function DiamondApp() {
               <LokLok></LokLok>
             </group>
           </group>
-
-          <OrbitControls
-            object-position={[0, 1, 3]}
-            target={[0, 0, 0]}
-            makeDefault
-          />
-
-          {/* <EnvLoader url="/hdr/sky.hdr"></EnvLoader> */}
-          <BloomPipeline />
         </Suspense>
+
+        <OrbitControls
+          object-position={[0, 1, 3]}
+          target={[0, 0, 0]}
+          makeDefault
+        />
+
+        <BloomPipeline />
       </CanvasGPU>
     </>
   );

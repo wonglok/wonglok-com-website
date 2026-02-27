@@ -5,7 +5,7 @@ Files: /Users/loklok/Downloads/lok/loklok.glb [83.08KB] > /Users/loklok/Download
 */
 import { Center, useGLTF } from '@react-three/drei'
 import { DiamindComponent } from './DiamondTSL/DiamondComponent';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 
 export function LokLok(props) {

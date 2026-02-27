@@ -193,9 +193,7 @@ export function BloomPipeline() {
 
     const aaColor = fxaa(scenePassColor);
 
-    // .add(ssrPass);
-
-    postProcessing.outputNode = add(aaColor, bloomPass.mul(1.0));
+    postProcessing.outputNode = bloomPass.add(aaColor);
 
     postProcessing.needsUpdate = true;
 
