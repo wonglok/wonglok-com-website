@@ -10,17 +10,54 @@ import { FiberScene } from './Fiber/FiberScene';
 
 		<div class=" bg-white rounded-t-2xl py-3 px-3">
 			<a href="https://wa.me/64141537" target="_blank" class="mr-1">
-			<button class=" cursor-pointer p-3 bg-[#1da41d] text-white rounded-2xl text-xs">Whatsapp</button>
-		</a>
-		<a href="https://www.linkedin.com/in/wonglok831" target="_blank" class="mr-1">
-			<button class=" cursor-pointer p-3 bg-[#1f6be5] text-white rounded-2xl text-xs">LinkdeIn</button>
-		</a>
-		<a href="/wonglok.vcf" target="_blank" download="WONG_LOK.vcf" class="mr-1">
-			<button class=" cursor-pointer p-3 bg-[#1fd1e5] text-white rounded-2xl text-xs">Card</button>
-		</a>
-		<a href="https://work-with.wonglok.com" target="_blank">
-			<button class=" cursor-pointer p-3 bg-[#e51fd8] text-white rounded-2xl text-xs">Portfolio</button>
-		</a>
+				<button class=" cursor-pointer p-3 bg-[#1da41d] text-white rounded-2xl text-xs">Whatsapp</button>
+			</a>
+			<a href="https://www.linkedin.com/in/wonglok831" target="_blank" class="mr-1">
+				<button class=" cursor-pointer p-3 bg-[#1f6be5] text-white rounded-2xl text-xs">LinkdeIn</button>
+			</a>
+			<a href="/wonglok.vcf" target="_blank" download="WONG_LOK.vcf" class="mr-1">
+				<button class=" cursor-pointer p-3 bg-[#1fd1e5] text-white rounded-2xl text-xs">Card</button>
+			</a>
+			<a href="https://work-with.wonglok.com" target="_blank">
+				<button class=" cursor-pointer p-3 bg-[#e51fd8] text-white rounded-2xl text-xs">Portfolio</button>
+			</a>
+			<button id="qr-btn" class="cursor-pointer p-3 bg-[#333] text-white rounded-2xl text-xs ml-1">QR</button>
 		</div>
 	</div>
 </div>
+
+<!-- QR Code Modal -->
+<dialog id="qr-modal" class="rounded-2xl p-4 border-0 shadow-2xl fixed inset-0 m-auto">
+	<div class="flex flex-col items-center gap-3">
+		<img id="qr-img" src="" alt="QR Code" class="w-64 h-64 rounded-xl" />
+		<p class="text-sm text-gray-500">Scan to visit wonglok.com</p>
+		<button id="qr-close" class="cursor-pointer px-4 py-2 bg-[#333] text-white rounded-xl text-xs">Close</button>
+	</div>
+</dialog>
+
+<style>
+	#qr-modal::backdrop {
+		background: rgba(0, 0, 0, 0.5);
+	}
+</style>
+
+<script>
+	const qrBtn = document.getElementById('qr-btn');
+	const qrModal = document.getElementById('qr-modal');
+	const qrClose = document.getElementById('qr-close');
+	const qrImg = document.getElementById('qr-img');
+
+	qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://wonglok.com';
+
+	qrBtn.addEventListener('click', () => {
+		qrModal.showModal();
+	});
+
+	qrClose.addEventListener('click', () => {
+		qrModal.close();
+	});
+
+	qrModal.addEventListener('click', (e) => {
+		if (e.target === qrModal) qrModal.close();
+	});
+</script>
