@@ -4,9 +4,9 @@ import { useFrame } from "@react-three/fiber";
 
 export function DiamondUnit() {
   return (
-    <group position={[0, -0.5, 0]}>
+    <group position={[0, 0, 0]}>
       <Suspense fallback={null}>
-        <group rotation={[0.25 * Math.PI, 0, 0]}>
+        <group rotation={[0, 0, 0]}>
           <Spinner>
             <DiamindComponent />
           </Spinner>

@@ -13,26 +13,32 @@ function DiamondApp() {
   return (
     <>
       <CanvasGPU>
-        <Suspense fallback={null}>
-          <BloomPipeline />
+        <>
+          <group position={[0, 0.5, 0]}>
+            <Suspense fallback={null}>
+              <BloomPipeline />
 
-          <Environment
-            background
-            backgroundIntensity={1.2}
-            files={[`/hdr/sky.hdr`]}
-          />
+              <Environment
+                background
+                backgroundIntensity={1.2}
+                files={[`/hdr/sky.hdr`]}
+              />
 
-          <LokLok></LokLok>
+              {/* <LokLok></LokLok> */}
 
-          <DiamondUnit></DiamondUnit>
-        </Suspense>
+              <group position={[0, 2, 0]} rotation={[0.15 * Math.PI, 0, 0]}>
+                <DiamondUnit></DiamondUnit>
+              </group>
+            </Suspense>
 
-        <OrbitControls
-          //
-          object-position={[0, 1, 3]}
-          target={[0, -0.5, 0]}
-          makeDefault
-        />
+            <OrbitControls
+              //
+              object-position={[0, 3, 2]}
+              target={[0, 2, 0]}
+              makeDefault
+            />
+          </group>
+        </>
       </CanvasGPU>
     </>
   );
