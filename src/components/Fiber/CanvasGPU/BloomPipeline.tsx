@@ -15,28 +15,28 @@ import {
   RenderPipeline,
   SRGBColorSpace,
 } from "three/webgpu";
-import {
-  normalView,
-  add,
-  directionToColor,
-  colorToDirection,
-  sample,
-  // float,
-  // mix,
-  // blendColor,
-  colorSpaceToWorking,
-  roughness,
-  metalness,
-  vec2,
-} from "three/tsl";
+// import {
+//   normalView,
+//   add,
+//   directionToColor,
+//   colorToDirection,
+//   sample,
+//   // float,
+//   // mix,
+//   // blendColor,
+//   colorSpaceToWorking,
+//   roughness,
+//   metalness,
+//   vec2,
+// } from "three/tsl";
 
 import { pass, mrt, output, emissive, vec4 } from "three/tsl";
 import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
-import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+// import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+// import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 // import { ssr } from "three/addons/tsl/display/SSRNode.js";
 // import { traa } from "three/addons/tsl/display/TRAANode.js";
@@ -141,7 +141,7 @@ export function BloomPipeline() {
 
     const emissivePass = scenePass.getTextureNode("emissive");
 
-    const bloomPass = bloom(emissivePass, 1.5, 1.0, 0.2);
+    const bloomPass = bloom(emissivePass, 10, 1.0, 0.5);
 
     const aaColor = fxaa(colorTexture.add(bloomPass));
 
