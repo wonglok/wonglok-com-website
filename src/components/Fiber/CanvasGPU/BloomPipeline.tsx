@@ -141,13 +141,15 @@ export function BloomPipeline() {
 
     const emissivePass = scenePass.getTextureNode("emissive");
 
-    const bloomPass = bloom(emissivePass, 2.5, 1.0, 0.25);
+    const bloomPass = bloom(emissivePass, 1.5, 1.0, 0.2);
 
     const aaColor = fxaa(colorTexture.add(bloomPass));
 
     const outputNode = aaColor;
 
-    const pipeline = new RenderPipeline(renderer as any, outputNode);
+    const pipeline = new RenderPipeline(renderer as any);
+
+    pipeline.outputNode = outputNode;
 
     let rAFID: any = 0;
 

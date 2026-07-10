@@ -43,6 +43,7 @@ import {
   CubeTexture,
   MeshBasicNodeMaterial,
   MeshPhysicalNodeMaterial,
+  MeshStandardMaterial,
   Vector3,
 } from "three/webgpu";
 
@@ -494,7 +495,7 @@ export function getDiamondSystem({
   function createDiamondMaterial() {
     uniforms.normalCube = normalCubeTex;
 
-    const material = new MeshBasicNodeMaterial({
+    const material = new MeshStandardMaterial({
       // color: 0xffffff,
       // metalness: 0.0,
       // roughness: 0.0,
@@ -502,11 +503,13 @@ export function getDiamondSystem({
       // // thickness: 1.0,
       // envMap: envMapTex,
       // // envMapIntensity: 1.0,
+      // emissiveNode: diamondFragmentShader(),
     });
 
     // Assign custom TSL shaders
     // material.vertexNode = diamondVertexShader()
     material.outputNode = diamondFragmentShader();
+    material.emissiveNode = vec3(material.outputNode).pow4().pow4().mul(205.0);
 
     return material;
   }
