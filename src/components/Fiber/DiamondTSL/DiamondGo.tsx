@@ -508,12 +508,11 @@ export function getDiamondSystem({
 
     // Assign custom TSL shaders
     // material.vertexNode = diamondVertexShader()
-    material.outputNode = diamondFragmentShader();
-    material.emissiveNode = vec3(material.outputNode)
-      .pow4()
-      .pow4()
-      .pow2()
-      .mul(250.0);
+    let finalNode = diamondFragmentShader();
+
+    //
+    material.outputNode = vec4(finalNode);
+    material.emissiveNode = vec3(finalNode).pow4().pow4().pow2().mul(250.0);
 
     return material;
   }
